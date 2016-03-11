@@ -1,0 +1,31 @@
+<?php
+$storeId = Mage::app()->getStore()->getStoreId();
+$isEnabled = Mage::getStoreConfig('message/messagestatus/status', $storeId);
+$subtotal = Mage::helper('checkout/cart')->getQuote()->getSubtotal();
+$pLocation = 3; // Show only for footer-page 
+if (($isEnabled == 1) && ($subtotal)) {
+    //Adds Custom message to shopping cart 
+    $collections = Mage::getModel('message/message')->getCollection()
+            ->addFieldToSelect('p_amount_less')
+            ->addFieldToSelect('p_amount_greater')
+            ->addFieldToSelect('p_message')
+            ->addFieldToSelect('p_location')
+            ->addFieldToFilter('p_amount_greater', array('lteq' => $subtotal))
+            ->addFieldToFilter('p_amount_less', array('gteq' => $subtotal))
+            ->addFieldToFilter('status', 1);
+    foreach ($collections as $collection) {
+        if ($collection['p_location'] == $pLocation) { // Show only for footer-page 
+            $messages = html_entity_decode(stripslashes($collection['p_message']));
+            ?>
+            <ul class="messages">
+                <li class="success-msg">
+                    <ul> 
+                        <li><span><?php echo nl2br($messages); ?></span></li>
+                    </ul>
+                </li>
+            </ul>
+            <?php
+        }
+    }
+}
+?>
