@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Kpatidar_Routem>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Kpatidar_Routem>
+    </modules>
+</config> 
