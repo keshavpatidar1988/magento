@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Vacsms_Smsnotification>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Vacsms_Smsnotification>
+    </modules>
+</config> 
