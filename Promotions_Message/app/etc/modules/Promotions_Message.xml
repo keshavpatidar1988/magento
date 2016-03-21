@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<config>
-    <modules>
-        <Promotions_Message>
-            <active>true</active>
-            <codePool>local</codePool>
-        </Promotions_Message>
-    </modules>
-</config> 
