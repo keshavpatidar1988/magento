@@ -1,0 +1,59 @@
+<?php
+/*
+ * Magcoder
+ * 
+ * NOTICE OF LICENSE 
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * versions in the future. If you wish to customize this extension for your
+ * needs please refer to http://www.magcoders.com/ for more information.
+ *
+ * @category     community
+ * @package      Promotions
+ * @license      http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @author      Support <support@magcoders.com>
+ * 
+ */
+?>
+<?php
+$storeId = Mage::app()->getStore()->getStoreId();
+$isEnabled = Mage::getStoreConfig('promotions/promotionsstatus/status', $storeId);
+$subtotal = Mage::helper('checkout/cart')->getQuote()->getSubtotal();
+$pLocation = 1;
+if (($isEnabled == 1) && ($subtotal)) {
+    //Adds Custom promotions to shopping cart 
+    $collections = Mage::getModel('promotions/promotions')->getCollection()
+            ->addFieldToSelect('p_amount_less')
+            ->addFieldToSelect('p_amount_greater')
+            ->addFieldToSelect('p_promotions')
+            ->addFieldToSelect('p_location', $pLocation)
+            ->addFieldToFilter('p_amount_greater', array('lteq' => $subtotal))
+            ->addFieldToFilter('p_amount_less', array('gteq' => $subtotal))
+            ->addFieldToFilter('store_id', array(
+                array('eq' => 0),
+                array('like' => '%' . $storeId . '%'),
+                    )
+            )
+            ->addFieldToFilter('status', 1);
+    foreach ($collections as $collection) {
+        if ($collection['p_location'] == $pLocation) { // Show only for cart items
+            $promotionss = html_entity_decode(stripslashes($collection['p_promotions']));
+            ?>
+            <ul class="promotionss-<?php echo $storeId; ?>">
+                <li class="success-msg-<?php echo $storeId; ?>">
+                    <ul>  
+                        <li><span><?php echo nl2br($promotionss); ?></span></li>
+                    </ul>
+                </li>
+            </ul>
+            <?php
+        }
+    }
+}
+?>
